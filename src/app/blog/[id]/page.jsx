@@ -3,7 +3,7 @@ import styles from "./page.module.css"
 import Image from 'next/image';
 import { notFound } from 'next/navigation'
 async function getData(id) {
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts/" + id, { cache: 'no-store' })
+  const res = await fetch(`http://localhost:3000/api/posts/${id}`, { cache: 'no-store' })
 
   if (!res.ok) {
     return notFound();
@@ -21,22 +21,22 @@ const BlogPost = async ({ params }) => {
             {data.title}
           </h1>
           <p className={styles.desc}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam blanditiis quaerat, vero tenetur eum optio facere ratione eaque reiciendis quasi praesentium voluptatem quos inventore minus adipisci facilis provident autem tempore!
+            {data.desc}
           </p>
           <div className={styles.author}>
             <Image
-              src="https://images.pexels.com/photos/2103127/pexels-photo-2103127.jpeg"
+              src={data.img}
               alt=""
               width={40}
               height={40}
               className={styles.avatar}
             />
-            <span className={styles.username}>John Doe</span>
+            <span className={styles.username}>{data.username}</span>
           </div>
         </div>
         <div className={styles.imageContainer}>
           <Image
-            src="https://images.pexels.com/photos/2103127/pexels-photo-2103127.jpeg"
+            src={data.img}
             alt=""
             fill={true}
             className={styles.image}
@@ -45,19 +45,7 @@ const BlogPost = async ({ params }) => {
       </div>
       <div className={styles.content}>
         <p className={styles.text}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius explicabo quia inventore. Molestiae perspiciatis ullam quaerat debitis enim asperiores officiis non libero ad id voluptate rem modi.
-          <br />
-          <br />
-
-
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequuntur, possimus fuga. Laboriosam commodi nemo ad nisi! Commodi nulla, incidunt praesentium, minus quas eius ea eveniet id labore ratione totam consequuntur.
-
-          <br />
-          <br />
-
-
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae eaque, quae quibusdam odit ipsam temporibus saepe harum quia reiciendis doloremque error, in explicabo autem debitis quo ab voluptatem fuga obcaecati.
-          lorem
+          {data.content}
         </p>
       </div>
     </div>
