@@ -14,7 +14,6 @@ const Dashboard = () => {
   //   const getData = async () => {
   //     setIsLoading(true)
   //     const res = await fetch("https://jsonplaceholder.typicode.com/posts", { cache: 'no-store' })
-
   //     if (!res.ok) {
   //       throw new Error("failed to fetch data")
   //     }
@@ -23,7 +22,6 @@ const Dashboard = () => {
   //     setIsLoading(false);
   //   };
   //   getData();
-
   // }, []);
   // console.log(data
   // )
@@ -31,7 +29,6 @@ const Dashboard = () => {
   const router = useRouter()
   const fetcher = (...args) => fetch(...args).then(res => res.json());
   const { data, error, mutate, isLoading } = useSWR(`/api/posts?username=${session?.data?.user.name}`, fetcher);
-  console.log(data)
 
   if (session.status === "loading") {
     return <p>Loading...</p>
@@ -53,6 +50,18 @@ const Dashboard = () => {
         })
       })
       mutate();
+      e.target.reset()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleDelete = async (id) => {
+    try {
+      await fetch(`/api/posts/${id}`, {
+        method: "DELETE",
+      })
+      mutate();
     } catch (err) {
       console.log(err)
     }
@@ -62,32 +71,27 @@ const Dashboard = () => {
     return (
       <div className={styles.container}>
         <div className={styles.posts}>
-          {isLoading ? "loading..." : data?.map(post => (
+          {isLoading ? "loading..." : data.length != 0 ? data.map(post => (
             <div className={styles.post} key={post._id}>
               <div className={styles.imgContainer}>
                 <Image src={post.img} alt="" width={200} height={100} />
               </div>
               <h2 className={styles.postTitle}>{post.title}</h2>
-              <span className={styles.delete}>X</span>
+              <span className={styles.delete} onClick={() => handleDelete(post._id)}>X</span>
             </div>
-          ))}
-
+          )) : "No posts yet!"}
         </div>
-
         <form className={styles.new} onSubmit={handleSubmit}>
           <h1>Add new Post</h1>
           <input type="text" placeholder='Title' className={styles.input} />
           <input type="text" placeholder='Desc' className={styles.input} />
           <input type="text" placeholder='Image ' className={styles.input} />
-          <textarea placeholder='content' className={StyleSheetList.textArea} cols="30" rows="10" ></textarea>
+          <textarea placeholder='content' className={styles.textArea} cols="30" rows="10" ></textarea>
           <button className={styles.button}>Send</button>
-
         </form>
-
       </div>
     )
   }
-
 }
 
 export default Dashboard
